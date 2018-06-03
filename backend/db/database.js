@@ -6,7 +6,7 @@ const connectDatabase = (cb) => {
 
   client = new Client({
     connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/gamico',
-    ssl: false,
+    ssl: true,
   })
 
   client.connect( (err) => { 
