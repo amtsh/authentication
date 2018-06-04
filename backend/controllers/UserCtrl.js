@@ -41,6 +41,9 @@ exports.getUserhandler = (req, res) => {
     params.email = req.session.user
   }
 
+  console.log(req.session)
+  console.log(params)
+
   if (missingParams(params, requiredParams)) {
     res.status(400).json({ error: "Bad request. Required " + requiredParams.toString() })
     return;
@@ -92,8 +95,11 @@ exports.logoutHandler = (req, res) => {
 
 exports.loginStatusHandler = (req, res) => {
   
-  let status = (req.sessionID in req.session)
-  res.status(200).json({'status': status})
+  if (req.session.user && req.cookies.gamico_session) {
+      res.status(200).json({'status': true})
+      return
+  }
+  res.status(200).json({'status': false})
 }
 
 const missingParams = (object, keys) => {

@@ -24,8 +24,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    expires: 600000,
-    secure: process.env.mode == 'production'
+    expires: 600000
   },
   name: 'gamico_session'
 }));
