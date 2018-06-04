@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 
 import HeaderBar from './../components/HeaderBar'
 import WelcomeCard from './../components/WelcomeCard'
+import request from './../utils/apiService.js'
 
 const HomeScreen = (props) => {
 
@@ -14,6 +15,16 @@ const HomeScreen = (props) => {
       </Link>
     )
   }
+
+  const goToLogin = () => {
+    props.history.push('/login')
+  }
+
+  const isLoggedIn = (() => {
+    request.get('/api/v1/authstatus', (response) => {
+      if (!response.status) { goToLogin() }
+    })
+  })()
 
   return (
     <div className="App">

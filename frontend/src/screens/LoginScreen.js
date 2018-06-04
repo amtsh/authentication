@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 
 import HeaderBar from './../components/HeaderBar'
 import LoginForm from './../components/LoginForm'
+import request from './../utils/apiService.js'
 
 const LoginScreen = (props) => {
 
@@ -16,8 +17,15 @@ const LoginScreen = (props) => {
   }
 
   const goToHome = () => {
+    console.log("redirecting to home")
     props.history.push('/home')
   }
+
+  const isLoggedIn = (() => {
+    request.get('/api/v1/authstatus', (response) => {
+      if (response.status) { goToHome() }
+    })
+  })()
 
   return (
     <div className="App">

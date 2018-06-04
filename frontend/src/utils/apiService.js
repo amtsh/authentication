@@ -1,6 +1,8 @@
 const post = (url, data, cb) => {
   fetch(url, {
     method: 'POST',
+    credentials: 'include',
+    mode: 'same-origin',
     body: JSON.stringify(data),
     headers:{
       'Content-Type': 'application/json'
@@ -12,10 +14,14 @@ const post = (url, data, cb) => {
 }
 
 const get = (url, cb) => {
-  fetch(url)
+  fetch(url, {
+    method: 'GET',
+    credentials: 'include',
+    mode: 'same-origin',
+  })
   .then(res => res.json())
   .catch(error => console.error('Error:', error))
-  .then(response => { cb(response); console.log(response) });
+  .then(response => { cb(response); });
 }
 
 export default {

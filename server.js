@@ -3,7 +3,11 @@ var session = require('express-session');
 const bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser');
 const sslRedirect = require('heroku-ssl-redirect')
-//var MemoryStore = require('memorystore')(session)
+
+const app = express()
+// serve static files
+app.use(express.static('./frontend/build'))
+app.use(cookieParser());
 
 const getDatabaseConnection = require('./backend/db/database')
 // connect database
@@ -11,23 +15,29 @@ getDatabaseConnection();
 
 const appRouter = require('./backend/routes')
 
-const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(sslRedirect()) /* enable ssl redirect */
 
-app.use(cookieParser());
 app.use(session({
-  secret: 'gamico_user_secret',
+  secret: process.env.secret || 'gamico_secret_dev',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
-      expires: 600000
+    expires: 600000,
+    secure: process.env.mode == 'production'
   },
+  name: 'gamico_session'
 }));
 
-// serve static files
-app.use(express.static('./frontend/build'))
+app.use((req, res, next) => {
+  if (req.cookies.gamico_session && !req.session.user) {
+    console.log("cleared cookies")
+    res.clearCookie('gamico_session');
+  }
+  next();
+});
+
 // serve api
 app.use('/api/v1/', appRouter)
 

@@ -45,7 +45,6 @@ exports.getUserhandler = (req, res) => {
 }
 
 exports.loginHandler = (req, res) => {
-  console.log(req.session)
   var requiredParams = ['email', 'password']
 
   if (missingParams(req.body, requiredParams)) {
@@ -66,10 +65,8 @@ exports.loginHandler = (req, res) => {
     if (req.body.password === response.password) {
 
       if (req.sessionID) {
-        req.session[req.sessionID] = req.body.email
-        req.session.save((err)=>{
-          res.status(200).json({'message': 'success'})
-        })
+        req.session.user = req.body.email
+        res.status(200).json({'message': 'success'})
       }
 
     } else {
@@ -80,7 +77,18 @@ exports.loginHandler = (req, res) => {
 }
 
 exports.logoutHandler = (req, res) => {
-  res.sendStatus(200)
+  
+  if (req.cookies.gamico_session || req.session.user) {
+    delete req.session.user
+    res.clearCookie('gamico_session');
+  }
+  res.status(200).json({'status': true})
+}
+
+exports.loginStatusHandler = (req, res) => {
+  
+  let status = (req.sessionID in req.session)
+  res.status(200).json({'status': status})
 }
 
 const missingParams = (object, keys) => {

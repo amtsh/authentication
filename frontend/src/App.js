@@ -5,6 +5,7 @@ import './App.css';
 
 import RegisterScreen from './screens/RegisterScreen'
 import LoginScreen from './screens/LoginScreen'
+import LogoutScreen from './screens/LogoutScreen'
 import HomeScreen from './screens/HomeScreen'
 
 const App = () => {
@@ -15,8 +16,9 @@ const App = () => {
           <Route exact path="/" component={RegisterScreen} />
           <Route path="/register" component={RegisterScreen} />
           <Route path="/login" component={LoginScreen} />
+          <Route path="/logout" component={LogoutScreen} />
           <Route path="/home" component={HomeScreen} />
-          <Route path="*" component={HomeScreen}/>
+          <Route path="*" component={RegisterScreen}/>
         </Switch>
 
       </div>
