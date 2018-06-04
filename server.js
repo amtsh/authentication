@@ -5,9 +5,9 @@ var cookieParser = require('cookie-parser');
 const sslRedirect = require('heroku-ssl-redirect')
 
 const app = express()
+app.use(cookieParser());
 // serve static files
 app.use(express.static('./frontend/build'))
-app.use(cookieParser());
 
 const getDatabaseConnection = require('./backend/db/database')
 // connect database
@@ -24,8 +24,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    expires: 600000,
-    secure: process.env.mode == 'production'
+    expires: 600000
   },
   name: 'gamico_session'
 }));
