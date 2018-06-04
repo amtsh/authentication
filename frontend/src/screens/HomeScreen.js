@@ -20,7 +20,7 @@ const HomeScreen = (props) => {
     props.history.push('/login')
   }
 
-  const isLoggedIn = (() => {
+  (() => {
     request.get('/api/v1/authstatus', (response) => {
       if (!response.status) { goToLogin() }
     })

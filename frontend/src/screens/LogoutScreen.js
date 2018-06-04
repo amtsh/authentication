@@ -7,7 +7,7 @@ const LogoutScreen = (props) => {
     props.history.push('/login')
   }
 
-  const logout = (() => {
+  (() => {
     request.get('/api/v1/logout', (response) => {
       if (response.status) {
         goToLogin()
