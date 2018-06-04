@@ -68,11 +68,11 @@ class LoginForm extends React.Component {
       request.post('/api/v1/login', {
         'email': this.state.email,
         'password': this.state.password
-      }, this.onSuccess)
+      }, this.onLoginSuccess)
     }
   }
 
-  onSuccess = (response) => {
+  onLoginSuccess = (response) => {
     if(response && response.error) {
       this.setState({ errorMsg: response.error });
     } else {

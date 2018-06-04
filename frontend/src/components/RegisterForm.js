@@ -12,6 +12,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ErrorIcon from '@material-ui/icons/Error';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import Validators from './../utils/validator.js';
 import request from './../utils/apiService.js';
@@ -24,13 +25,16 @@ class RegisterForm extends React.Component {
     usernameError: false,
     emailError: false,
     passwordError: false,
-    errorMsg: ''
+    errorMsg: '',
+    successMsg: ''
   };
 
   Messages = {
     username: 'Should be alphanumberic with minimum 4 characters and maximum 20 characters.',
     email: 'Should be valid email with maximum 50 characters',
-    password: 'Should have minimum 8 characters and maximum 20 characters.'
+    password: 'Should have minimum 8 characters and maximum 20 characters.',
+    available: 'Username and Email available.',
+    unavailable: 'Username and Email unavailable.'
   }
 
   handleChange = name => event => {
@@ -57,6 +61,23 @@ class RegisterForm extends React.Component {
     this.setState({ [name + 'Msg']: this.Messages[name] });
   };
 
+  getUser = () => {
+    if (this.state.username && this.state.email) {
+        request.post('/api/v1/users/find', {
+        'username': this.state.username,
+        'email': this.state.email
+      }, this.onFindSuccess)
+    }
+  }
+
+  onFindSuccess = (response) => {
+    if (response.email) {
+      this.setState({ errorMsg: this.Messages.unavailable, successMsg: '' })
+    } else {
+      this.setState({ successMsg: this.Messages.available, errorMsg: '' })
+    }
+  }
+
   submitHandler = (e) => {
     e.preventDefault();
 
@@ -76,7 +97,7 @@ class RegisterForm extends React.Component {
 
   onSuccess = (response) => {
     if(response && response.error) {
-      this.setState({ errorMsg: response.error })
+      this.setState({ successMsg: '', errorMsg: response.error })
     } else {
       this.setState({ errorMsg: '' })
       this.props.onAuthentication()
@@ -152,6 +173,18 @@ class RegisterForm extends React.Component {
                     </ListItemIcon>
                     <ListItemText>
                       <span style={{color:'red'}}>{this.state.errorMsg}</span>
+                    </ListItemText>
+                  </ListItem>) : ""
+              }
+
+              {
+                this.state.successMsg ? 
+                  (<ListItem>
+                    <ListItemIcon>
+                      <CheckCircleIcon style={{color: 'green'}}/>
+                    </ListItemIcon>
+                    <ListItemText>
+                      <span style={{color:'green'}}>{this.state.successMsg}</span>
                     </ListItemText>
                   </ListItem>) : ""
               }
