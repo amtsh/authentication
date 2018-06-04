@@ -41,9 +41,6 @@ exports.getUserhandler = (req, res) => {
     params.email = req.session.user
   }
 
-  console.log(req.session)
-  console.log(params)
-
   if (missingParams(params, requiredParams)) {
     res.status(400).json({ error: "Bad request. Required " + requiredParams.toString() })
     return;
