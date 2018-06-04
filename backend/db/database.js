@@ -10,6 +10,7 @@ const connectDatabase = (cb) => {
   })
 
   client.connect( (err) => { 
+    console.log(err)
     if(!err) 
       console.log("Database connected")
     else

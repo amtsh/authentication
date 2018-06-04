@@ -27,11 +27,26 @@ const findUser = (user, cb) => {
   executeQuery(query, cb)
 }
 
+const createTable = () => {
+  const query = {
+    text: "CREATE TABLE users ( ID SERIAL PRIMARY KEY, username VARCHAR, email VARCHAR, password VARCHAR )",
+  }
+  
+  db.query(query).then(res => console.log("Table users created") )
+}
+
 const executeQuery = (query, cb) => {
   db.query(query)
     .then(res => cb(res.rows[0]))
-    .catch(e => console.error(e.stack))
+    .catch(e => { 
+      if (e.code == '42P01') { 
+        createTable() 
+      } else {
+        console.log(e.stack())
+      }
+    })
 }
+
 
 module.exports = {
   create: createUser,

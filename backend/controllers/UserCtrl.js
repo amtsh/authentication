@@ -45,6 +45,7 @@ exports.getUserhandler = (req, res) => {
 }
 
 exports.loginHandler = (req, res) => {
+  console.log(req.session)
   var requiredParams = ['email', 'password']
 
   if (missingParams(req.body, requiredParams)) {
@@ -57,12 +58,20 @@ exports.loginHandler = (req, res) => {
   }
 
   User.find(params, (response) => {
+    let uuid = uuidGenerator()
     if (!response) {
       res.status(400).json({'error': 'Incorrect email'})
       return
     }
     if (req.body.password === response.password) {
-      res.status(200).json({'message': 'success'})
+
+      if (req.sessionID) {
+        req.session[req.sessionID] = req.body.email
+        req.session.save((err)=>{
+          res.status(200).json({'message': 'success'})
+        })
+      }
+
     } else {
       res.status(400).json({'error': 'Incorrect password'})
     }
@@ -81,4 +90,9 @@ const missingParams = (object, keys) => {
     }
   }
   return false
+}
+
+const uuidGenerator = () => {
+  return  Math.random().toString(36).substring(2, 15) + 
+    Math.random().toString(36).substring(2, 15);
 }

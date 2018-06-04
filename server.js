@@ -3,6 +3,7 @@ var session = require('express-session');
 const bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser');
 const sslRedirect = require('heroku-ssl-redirect')
+//var MemoryStore = require('memorystore')(session)
 
 const getDatabaseConnection = require('./backend/db/database')
 // connect database
@@ -17,13 +18,12 @@ app.use(sslRedirect()) /* enable ssl redirect */
 
 app.use(cookieParser());
 app.use(session({
-  key: 'gamico_user_sid',
   secret: 'gamico_user_secret',
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   cookie: {
       expires: 600000
-  }
+  },
 }));
 
 // serve static files
