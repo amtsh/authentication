@@ -6,10 +6,25 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
-
-
+import request from './../utils/apiService.js';
 
 class LoginForm extends React.Component {
+
+  state = {
+    user: ''
+  }
+
+  componentDidMount () {
+    this.getUser()
+  }
+
+  getUser = () => {
+    request.post('/api/v1/users/find', {}, this.onSuccess)
+  }
+
+  onSuccess = (response) => {
+    this.setState({ user: response.username })
+  }
 
   render() {
     const { classes } = this.props;
@@ -19,7 +34,7 @@ class LoginForm extends React.Component {
 
         <Card className={classes.card}>
           <CardContent>
-            <h3>Welcome</h3>
+            <h3>Welcome {this.state.user} </h3>
           </CardContent>
 
           <CardActions style={{justifyContent: 'center',}}>
